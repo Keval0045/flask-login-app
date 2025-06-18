@@ -6,6 +6,14 @@ The app supports user registration, login, logout, and a protected dashboard pag
 
 ---
 
+## Screenshots
+<img width="1470" alt="Screenshot 2025-06-17 at 8 40 56 PM" src="https://github.com/user-attachments/assets/2b1fa7eb-9729-47b2-8ec3-e714ebf16f7a" />
+<img width="1470" alt="Screenshot 2025-06-17 at 8 41 03 PM" src="https://github.com/user-attachments/assets/5d799532-ba8e-442a-976b-0ce8d6b200a1" />
+<img width="1470" alt="Screenshot 2025-06-17 at 8 41 11 PM" src="https://github.com/user-attachments/assets/e2bae065-15f6-4e9b-b3fe-8a7471e7857f" />
+
+
+---
+
 ## Features
 
 - User Registration (username + password)  
