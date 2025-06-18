@@ -1,80 +1,150 @@
-# CST8919 Lab 2: Building a Web App with Threat Detection using Azure Monitor and KQL
 
+# Flask Login App
 
-## Objective
-
-In this lab, you will:
-- Create a simple Demo Python Flask app
-- Deploy a the app to Azure App Service
-- Enable diagnostic logging with Azure Monitor
-- Use Kusto Query Language (KQL) to analyze logs
-- Create an alert rule to detect suspicious activity and send it to your email
----
-## Scenario
-As a cloud security engineer, you're tasked with securing a simple web application. The app logs login attempts. You must detect brute-force login behavior and configure an automatic alert when it occurs.
-
-## Tasks
-
-### Part 1: Deploy the Flask App to Azure
-1. Develop a Python Flask app with a `/login` route that logs both successful and failed login attempts.
-2. Deploy the app using **Azure Web App**.
-
-### Part 2: Enable Monitoring
-1. Create a **Log Analytics Workspace** in the same region.
-2. In your Web App, go to **Monitoring > Diagnostic settings**:
-   - Enable:
-     - `AppServiceConsoleLogs`
-     - `AppServiceHTTPLogs` (optional)
-   - Send to the Log Analytics workspace.
-3. Interact with the app to generate logs (e.g., failed `/login` attempts).
-
-
-You must test your app using a .http file (compatible with VS Code + REST Client) and include that file in your GitHub repo as test-app.http.
-
-### Part 3: Query Logs with KQL
-1. Create a KQL query to find failed login attempts.
-2. Test it
-
-### Part 4: Create an Alert Rule
-1. Go to Azure Monitor > Alerts > + Create > Alert Rule.
-2. Scope: Select your Log Analytics Workspace.
-3. Condition: Use the query you created in the last step.
-4. Set:
-    - Measure: Table rows
-    - Threshold: Greater than 5
-    - Aggregation granularity: 5 minutes
-    - Frequency of evaluation: 1 minute
-    - Add an Action Group to send an email notification.
-    - Name the rule and set Severity (2 or 3).
-    - Save the alert.
-
-## Submission
-### GitHub Repository
-- Initialize a Git repository for your project.
-- Make **frequent commits** with meaningful commit messages.
-- Push your code to a **public GitHub repository**.
-- Include  **YouTube demo link in the README.md**.
-
-Include a `README.md` with:
-  - Briefly describe what you learned during this lab, challenges you faced, and how you’d improve the detection logic in a real-world scenario.
-  - Your KQL query with explanation
-
-- **A link to a 5-minute YouTube video demo** showing:
-  - App deployed
-  - Log generation and inspection in Azure Monitor
-  - KQL query usage
-  - Alert configuration and triggering
-
-You must test your app using a .http file (compatible with VS Code + REST Client) and include that file in your GitHub repo as test-app.http.
-
+This is a simple Flask web application demonstrating user authentication using Flask-Login.  
+The app supports user registration, login, logout, and a protected dashboard page.
 
 ---
 
-## Submission Instructions
+## Features
 
-Submit your **GitHub repository link** via Brightspace.
-
-**Deadline**: Wednesday, 18 June 2025
+- User Registration (username + password)  
+- User Login and Logout  
+- Protected Dashboard accessible only to logged-in users  
+- Password hashing using Werkzeug  
+- Flask-Login integration for session management
 
 ---
 
+## Project Structure
+
+```
+flask-login-app/
+│
+├── app.py                  # Main Flask app file
+├── requirements.txt        # Python dependencies
+├── templates/              # HTML templates
+│   ├── login.html
+│   ├── register.html
+│   └── dashboard.html
+└── README.md               # This file
+```
+
+---
+
+## Prerequisites
+
+- Python 3.10+ installed  
+- Virtual environment tool (`venv` recommended)  
+- Git installed if using version control
+
+---
+
+## Setup and Installation
+
+1. Clone the repository:  
+```bash
+git clone <your-repo-url>
+cd flask-login-app
+```
+
+2. Create and activate a virtual environment:  
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install dependencies:  
+```bash
+pip install -r requirements.txt
+```
+
+4. Run the Flask app locally:  
+```bash
+python app.py
+```
+
+5. Open your browser and go to:  
+```
+http://127.0.0.1:5000
+```
+
+---
+
+## Usage
+
+- Navigate to `/register` to create a new user account.  
+- Navigate to `/login` to sign in.  
+- Once logged in, access the `/dashboard` page.  
+- Use the logout link to sign out.
+
+---
+
+## Deployment on Azure Web App
+
+1. Set deployment user credentials (one-time):  
+```bash
+az webapp deployment user set --user-name <your-username> --password <your-password>
+```
+
+2. Configure local git deployment for your app:  
+```bash
+az webapp deployment source config-local-git --name <app-name> --resource-group <resource-group-name>
+```
+
+3. Add Azure remote git URL to your repo:  
+```bash
+git remote add azure <deployment-git-url>
+```
+
+4. Push your code to Azure (make sure to push to `master` branch):  
+```bash
+git push azure main:master
+```
+
+5. After deployment, browse to your Azure app URL, e.g.:  
+```
+https://<app-name>.azurewebsites.net
+```
+
+---
+
+## Challenges Faced and Solutions
+
+### 1. Deployment branch mismatch error  
+- **Problem:** Pushing to `main` branch caused deployment failure since Azure expected `master`.  
+- **Solution:** Used `git push azure main:master` to explicitly push local `main` branch to remote `master`.
+
+### 2. Missing Python dependencies on Azure  
+- **Problem:** Azure didn’t have Flask-Login installed, causing import errors.  
+- **Solution:** Added `requirements.txt` listing all dependencies and ensured Azure ran `pip install -r requirements.txt` during deployment.
+
+### 3. Blank page after login on Azure  
+- **Problem:** After deployment, only a single "Flask login app running!" message showed.  
+- **Solution:** Added full Flask app code with proper routes and HTML templates to enable full functionality.
+
+### 4. Missing logout button on dashboard  
+- **Problem:** UI lacked logout link to allow users to sign out.  
+- **Solution:** Added logout button in dashboard template linking to `/logout`.
+
+### 5. Module not found error locally  
+- **Problem:** `ModuleNotFoundError: No module named 'flask_login'` during local runs.  
+- **Solution:** Installed missing packages inside virtual environment with `pip install flask-login`.
+
+---
+
+## Requirements File (`requirements.txt`)
+
+```
+Flask==2.3.2
+Flask-Login==0.6.2
+Werkzeug==2.3.7
+```
+
+---
+
+## Author
+
+Keval Trivedi
+
+---
